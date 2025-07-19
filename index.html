@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Harshit Lamba - Fitness Trainer</title>
+  <link class="icon" rel="icon" href="./android-chrome-512x512.png" type="image/x-icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    /* Reset & base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #111;
+      color: #fff;
+      line-height: 1.6;
+      scroll-behavior: smooth;
+    }
+
+    /* Navbar Styling */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 50px;
+      z-index: 999;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.7);
+      backdrop-filter: blur(10px);
+      transition: top 0.3s ease;
+    }
+
+    /* Hide nav on scroll down */
+    nav.hide {
+      top: -80px; /* hide nav above viewport */
+    }
+
+   .logo {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #00ff88;
+  line-height: 1.2;
+  white-space: nowrap;
+  user-select: none;
+  position: relative; /* underline ke liye relative position */
+  display: inline-block; /* underline ko sahi position mein lane ke liye */
+}
+
+/* underline ke liye */
+.logo::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;  /* thoda niche underline ke liye */
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: #00ff88;
+  border-radius: 2px;
+}
+
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 30px;
+    }
+    nav ul li a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 1rem;
+      position: relative;
+      user-select: none;
+      padding: 10px 20px;
+      display: block;
+    }
+    nav ul li a::after {
+      content: '';
+      width: 0;
+      height: 2px;
+      position: absolute;
+      left: 0;
+      bottom: 5px;
+      background-color: #00ff88;
+      transition: 0.3s;
+    }
+    nav ul li a:hover::after {
+      width: 100%;
+    }
+
+    /* Hamburger menu button - hidden on desktop */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      gap: 5px;
+      user-select: none;
+      z-index: 1001;
+    }
+    .hamburger div {
+      width: 25px;
+      height: 3px;
+      background-color: #00ff88;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+
+    /* Hamburger active animation */
+    .hamburger.active div:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    .hamburger.active div:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger.active div:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    /* Mobile nav menu styles */
+    @media (max-width: 768px) {
+      nav {
+        padding: 15px 20px;
+      }
+
+      nav ul {
+        position: fixed;
+        top: 60px;
+        right: 0;
+        background: #111;
+        height: calc(100vh - 60px); /* use 100vh to avoid bottom overflow */
+        width: 220px;
+        flex-direction: column;
+        gap: 20px;
+        padding: 30px 20px;
+        box-shadow: -3px 0 20px rgba(0, 255, 136, 0.8);
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        z-index: 1000;
+        border-left: 2px solid #00ff88;
+
+        /* fix scrollbar and glow overflow */
+        overflow-y: auto;
+        overscroll-behavior: contain;
+
+        /* Prevent horizontal scroll */
+        box-sizing: border-box;
+      }
+      nav ul.active {
+        transform: translateX(0);
+      }
+      nav ul::-webkit-scrollbar {
+        width: 6px; /* thinner scrollbar */
+      }
+      nav ul::-webkit-scrollbar-thumb {
+        background-color: #00ff88;
+        border-radius: 3px;
+      }
+      nav ul::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      nav ul li a {
+        font-size: 1.2rem;
+        padding: 15px 10px;
+        font-weight: 700;
+        color: #00ff88;
+        text-shadow: 0 0 8px #00ff88;
+        user-select: none;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+    }
+
+    /* Hero Section */
+    header {
+      background: url('https://images.unsplash.com/photo-1605296867304-46d5465a13f1') no-repeat center center/cover;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding-top: 60px; /* for fixed nav */
+    }
+    .hero {
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 40px;
+      border-radius: 10px;
+      max-width: 700px;
+      text-align: center;
+      animation: fadeIn 1.5s ease-in;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .hero span {
+      color: #00ff88;
+    }
+    .hero p {
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+    }
+    .btn {
+      background: linear-gradient(135deg, #00ff88, #00cc66);
+      padding: 12px 28px;
+      color: #111;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: 0.3s ease;
+      display: inline-block;
+      box-shadow: 0 0 10px #00ff88;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background: linear-gradient(135deg, #00cc66, #00ff88);
+      box-shadow: 0 0 15px #00ff88;
+    }
+
+    /* Section Base */
+    .section {
+      padding: 60px 20px;
+      text-align: center;
+      max-width: 1000px;
+      margin: auto;
+    }
+    .section.dark {
+      background: #222;
+    }
+
+    /* Services Section */
+    #services {
+      padding-bottom: 80px;
+    }
+    #services h2 {
+      margin-bottom: 40px;
+      font-weight: 700;
+      font-size: 2.8rem;
+    }
+    #services .services-wrapper {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+    #services .service-card {
+      background: #1e1e1e;
+      border-radius: 12px;
+      padding: 30px;
+      flex: 1 1 250px;
+      box-shadow: 0 4px 15px rgba(0,255,136,0.25);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+    #services .service-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 10px 30px rgba(0,255,136,0.4);
+    }
+    #services .service-card h3 {
+      color: #00ff88;
+      margin-bottom: 15px;
+      font-size: 1.5rem;
+    }
+    #services .service-card p {
+      font-size: 1rem;
+      color: #ddd;
+      line-height: 1.4;
+    }
+
+    /* BMI Calculator Section */
+    #bmi input[type="number"] {
+      padding: 8px 10px;
+      margin-right: 8px;
+      border-radius: 5px;
+      border: none;
+      font-size: 1rem;
+      width: 130px;
+      max-width: 100%;
+    }
+    #bmi button {
+      padding: 8px 15px;
+      border-radius: 5px;
+      border: none;
+      background: #00ff88;
+      color: #111;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    #bmi button:hover {
+      background: #00cc66;
+    }
+    #bmi #bmi-result {
+      margin-top: 15px;
+      font-weight: 700;
+    }
+
+    /* Contact Section */
+    #contact {
+      background: url('https://images.unsplash.com/photo-1605296867304-46d5465a13f1') no-repeat center center/cover;
+      background-size: cover;
+      padding: 80px 20px;
+    }
+    #contact .contact-overlay {
+      background-color: rgba(0,0,0,0.75);
+      padding: 40px 30px;
+      border-radius: 15px;
+      max-width: 500px;
+      margin: auto;
+      color: #fff;
+      text-align: left;
+    }
+    #contact h2 {
+      font-weight: 700;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      color: #00ff88;
+      text-align: center;
+    }
+    #contact p {
+      margin-bottom: 30px;
+      text-align: center;
+      font-size: 1.1rem;
+      color: #ddd;
+    }
+    #contact form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    #contact input, #contact textarea {
+      padding: 15px;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+      resize: vertical;
+      font-family: inherit;
+    }
+    #contact button {
+      background: #00ff88;
+      color: #000;
+      font-weight: 700;
+      border: none;
+      padding: 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: background 0.3s ease;
+    }
+    #contact button:hover {
+      background: #00cc66;
+    }
+
+    /* Footer */
+    footer {
+      background: #000;
+      color: #00ff88;
+      text-align: center;
+      padding: 20px 10px;
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: 0.05em;
+      box-shadow: inset 0 1px 3px rgba(0,255,136,0.4);
+      user-select: none;
+    }
+
+    /* Responsive Improvements */
+    @media (max-width: 768px) {
+  nav ul {
+    width: 80vw;
+  }
+}
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    .nav-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.insta-icon {
+  color: #00ff88;
+  font-size: 1.5rem;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.insta-icon:hover {
+  color: #fff;
+  transform: scale(1.1);
+}
+
+  </style>
+</head>
+<body>
+
+  <nav role="navigation" aria-label="Primary Navigation">
+    <div class="nav-left">
+  <div class="logo">Harshit Lamba</div>
+  <a href="https://www.instagram.com/harshit.lamba_?igsh=bzU5cjUyb242enQ%3D&utm_source=qr" target="_blank" class="insta-icon" aria-label="Instagram">
+    <i class="fab fa-instagram"></i>
+  </a>
+</div>
+
+
+
+    <ul class="nav-menu" id="nav-menu" role="menubar" aria-label="Primary menu">
+      <li role="none"><a href="#home" role="menuitem" tabindex="-1">Home</a></li>
+      <li role="none"><a href="#about" role="menuitem" tabindex="-1">About Me</a></li>
+      <li role="none"><a href="#services" role="menuitem" tabindex="-1">Services</a></li>
+      <li role="none"><a href="#bmi" role="menuitem" tabindex="-1">BMI Calculator</a></li>
+      <li role="none"><a href="#contact" role="menuitem" tabindex="-1">Contact</a></li>
+    </ul>
+
+    <div class="hamburger" id="hamburger" role="button" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-menu" tabindex="0">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </nav>
+
+  <header id="home">
+    <section class="hero">
+      <h1>Hi, I’m <span>Harshit Lamba</span> <br /> Your fitness trainer</h1>
+      <p>I help you achieve your dream body and a healthy lifestyle</p>
+      <a href="#contact" class="btn" role="button">Contact Me</a>
+    </section>
+  </header>
+
+  <section id="about" class="section dark">
+    <h2>About Me</h2>
+    <p>I am a certified fitness trainer with 4+ years of experience in transforming lives. I believe fitness is not just about the body, but about a balanced mind and soul.</p>
+  </section>
+
+  <section id="services" class="section">
+    <h2>Services</h2>
+    <div class="services-wrapper">
+      <div class="service-card">
+        <h3>Personal Training</h3>
+        <p>One-on-one personalized workout plans tailored to your goals.</p>
+      </div>
+      <div class="service-card">
+        <h3>Group Sessions</h3>
+        <p>Motivational and energetic group classes to keep you pushing.</p>
+      </div>
+      <div class="service-card">
+        <h3>Nutrition Plans</h3>
+        <p>Custom meal plans that complement your workout routine.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="bmi" class="section dark" aria-label="BMI Calculator Section">
+    <h2>BMI Calculator</h2>
+    <p>Enter your height in centimeters and weight in kilograms:</p>
+    <input type="number" id="height" placeholder="Height (cm)" aria-label="Height in centimeters" min="0" step="any" />
+    <input type="number" id="weight" placeholder="Weight (kg)" aria-label="Weight in kilograms" min="0" step="any" />
+    <button onclick="calculateBMI()" aria-label="Calculate BMI">Calculate BMI</button>
+    <p id="bmi-result" aria-live="polite" style="margin-top: 15px; font-weight: 700;"></p>
+  </section>
+
+  <section id="contact" class="section">
+    <div class="contact-overlay">
+      <h2>Contact Me</h2>
+      <p>Ready to start your fitness journey? Get in touch!</p>
+      <form action="https://formspree.io/f/xovljqnd" method="post" aria-label="Contact form">
+        <input type="text" name="name" placeholder="Your Name" aria-required="true" required />
+        <input type="email" name="email" placeholder="Your Email" aria-required="true" required />
+        <textarea name="message" rows="5" placeholder="Your Message" aria-required="true" required></textarea>
+        <button type="submit" aria-label="Send message">Send</button>
+      </form>
+    </div>
+  </section>
+
+  <footer>
+    &copy; 2025 Harshit Lamba. All rights reserved.
+  </footer>
+
+  <script>
+    const hamburger = document.getElementById("hamburger");
+    const navMenu = document.getElementById("nav-menu");
+    const nav = document.querySelector("nav");
+
+    // Toggle hamburger menu
+    hamburger.addEventListener("click", () => {
+      hamburger.classList.toggle("active");
+      navMenu.classList.toggle("active");
+
+      // Update aria-expanded for accessibility
+      const expanded = hamburger.getAttribute("aria-expanded") === "true";
+      hamburger.setAttribute("aria-expanded", !expanded);
+    });
+
+    // Allow toggling hamburger via keyboard (Enter/Space)
+    hamburger.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        hamburger.click();
+      }
+    });
+
+    // Hide navbar on scroll down, show on scroll up, and close mobile menu on scroll
+    let lastScrollTop = 0;
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+      if (scrollTop > lastScrollTop && scrollTop > 80) {
+        // scrolling down, hide nav
+        nav.classList.add('hide');
+
+        // Also close mobile menu if open
+        if (navMenu.classList.contains('active')) {
+          navMenu.classList.remove('active');
+          hamburger.classList.remove('active');
+          hamburger.setAttribute('aria-expanded', 'false');
+        }
+      } else {
+        // scrolling up, show nav
+        nav.classList.remove('hide');
+      }
+      lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
+    });
+
+    // BMI Calculator function
+    function calculateBMI() {
+      const height = parseFloat(document.getElementById("height").value);
+      const weight = parseFloat(document.getElementById("weight").value);
+      const result = document.getElementById("bmi-result");
+
+      if (!height || !weight || height <= 0 || weight <= 0) {
+        result.textContent = "Please enter valid height and weight.";
+        return;
+      }
+
+      const bmi = weight / ((height / 100) ** 2);
+      let category = "";
+
+      if (bmi < 18.5) category = "Underweight";
+      else if (bmi < 24.9) category = "Normal weight";
+      else if (bmi < 29.9) category = "Overweight";
+      else category = "Obese";
+
+      result.textContent = `Your BMI is ${bmi.toFixed(2)} (${category})`;
+    }
+  </script>
+</body>
+</html>
